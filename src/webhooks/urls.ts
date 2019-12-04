@@ -20,7 +20,8 @@ export enum WebhookListUrlFiltersEnum {
 export type WebhookListUrlFilters = Filters<WebhookListUrlFiltersEnum>;
 export type WebhookListUrlDialog = "remove" | TabActionDialog;
 export enum WebhookListUrlSortField {
-  name = "name"
+  name = "name",
+  serviceAccount = "account"
 }
 export type WebhookListUrlSort = Sort<WebhookListUrlSortField>;
 export type WebhookListUrlQueryParams = ActiveTab &

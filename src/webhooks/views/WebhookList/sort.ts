@@ -14,6 +14,8 @@ export function getSortQueryField(
   switch (sort) {
     case WebhookListUrlSortField.name:
       return WebhooksSortField.NAME;
+    case WebhookListUrlSortField.serviceAccount:
+      return WebhooksSortField.SERVICE_ACCOUNT;
     default:
       return undefined;
   }

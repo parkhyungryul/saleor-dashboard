@@ -507,6 +507,12 @@ export enum ProductTypeEnum {
   SHIPPABLE = "SHIPPABLE",
 }
 
+export enum ProductTypeSortField {
+  DIGITAL = "DIGITAL",
+  NAME = "NAME",
+  SHIPPING_REQUIRED = "SHIPPING_REQUIRED",
+}
+
 export enum SaleType {
   FIXED = "FIXED",
   PERCENTAGE = "PERCENTAGE",
@@ -942,6 +948,11 @@ export interface ProductTypeInput {
   isDigital?: boolean | null;
   weight?: any | null;
   taxCode?: string | null;
+}
+
+export interface ProductTypeSortingInput {
+  direction: OrderDirection;
+  field?: ProductTypeSortField | null;
 }
 
 export interface ProductVariantBulkCreateInput {

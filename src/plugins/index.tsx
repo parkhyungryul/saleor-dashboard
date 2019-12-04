@@ -12,7 +12,7 @@ import {
   PluginUrlQueryParams
 } from "./urls";
 import PluginsDetailsComponent from "./views/PluginsDetails";
-import PluginsListComponent from "./views/PluginsList";
+import PluginsListComponent from "./views/PluginList";
 
 const PluginList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));

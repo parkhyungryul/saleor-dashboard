@@ -8,9 +8,9 @@ import { maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
 import React from "react";
 
-import PluginsListPage from "../components/PluginsListPage/PluginsListPage";
-import { TypedPluginsListQuery } from "../queries";
-import { PluginListUrlQueryParams, pluginsUrl } from "../urls";
+import PluginsListPage from "../../components/PluginsListPage/PluginsListPage";
+import { TypedPluginsListQuery } from "../../queries";
+import { PluginListUrlQueryParams, pluginsUrl } from "../../urls";
 
 interface PluginsListProps {
   params: PluginListUrlQueryParams;

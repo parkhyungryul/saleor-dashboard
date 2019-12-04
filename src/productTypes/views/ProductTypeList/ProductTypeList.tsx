@@ -18,6 +18,7 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
 import { ListViews } from "@saleor/types";
+import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
 import { configurationMenuUrl } from "../../../configuration";
 import { getMutationState, maybe } from "../../../misc";
 import ProductTypeListPage from "../../components/ProductTypeListPage";
@@ -30,7 +31,8 @@ import {
   ProductTypeListUrlDialog,
   ProductTypeListUrlFilters,
   ProductTypeListUrlQueryParams,
-  productTypeUrl
+  productTypeUrl,
+  ProductTypeListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -153,6 +155,14 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: ProductTypeListUrlSortField) =>
+    navigate(
+      productTypeListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <TypedProductTypeBulkDeleteMutation
       onCompleted={handleProductTypeBulkDelete}
@@ -193,8 +203,10 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
               onNextPage={loadNextPage}
               onPreviousPage={loadPreviousPage}
               onRowClick={id => () => navigate(productTypeUrl(id))}
+              onSort={handleSort}
               isChecked={isSelected}
               selected={listElements.length}
+              sort={getSortParams(params)}
               toggle={toggle}
               toggleAll={toggleAll}
               toolbar={

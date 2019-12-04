@@ -8,9 +8,15 @@ import { maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
 import React from "react";
 
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import PluginsListPage from "../../components/PluginsListPage/PluginsListPage";
 import { usePluginsListQuery } from "../../queries";
-import { PluginListUrlQueryParams, pluginsUrl } from "../../urls";
+import {
+  PluginListUrlQueryParams,
+  pluginListUrl,
+  pluginsUrl,
+  PluginListUrlSortField
+} from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
 interface PluginsListProps {
@@ -42,6 +48,15 @@ export const PluginsList: React.FC<PluginsListProps> = ({ params }) => {
     paginationState,
     params
   );
+
+  const handleSort = (field: PluginListUrlSortField) =>
+    navigate(
+      pluginListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <>
       <PluginsListPage
@@ -49,10 +64,12 @@ export const PluginsList: React.FC<PluginsListProps> = ({ params }) => {
         settings={settings}
         plugins={maybe(() => data.plugins.edges.map(edge => edge.node))}
         pageInfo={pageInfo}
+        sort={getSortParams(params)}
         onAdd={() => navigate(configurationMenuUrl)}
         onBack={() => navigate(configurationMenuUrl)}
         onNextPage={loadNextPage}
         onPreviousPage={loadPreviousPage}
+        onSort={handleSort}
         onUpdateListSettings={updateListSettings}
         onRowClick={id => () => navigate(pluginsUrl(id))}
       />

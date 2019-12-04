@@ -17,6 +17,7 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import { CategoryListPage } from "../../components/CategoryListPage/CategoryListPage";
 import { useCategoryBulkDeleteMutation } from "../../mutations";
 import { useRootCategoriesQuery } from "../../queries";
@@ -27,7 +28,8 @@ import {
   CategoryListUrlDialog,
   CategoryListUrlFilters,
   CategoryListUrlQueryParams,
-  categoryUrl
+  categoryUrl,
+  CategoryListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -156,6 +158,14 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
     maybe(() => categoryBulkDeleteOpts.data.categoryBulkDelete.errors)
   );
 
+  const handleSort = (field: CategoryListUrlSortField) =>
+    navigate(
+      categoryListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <>
       <CategoryListPage
@@ -172,8 +182,10 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
         onTabSave={() => openModal("save-search")}
         tabs={tabs.map(tab => tab.name)}
         settings={settings}
+        sort={getSortParams(params)}
         onAdd={() => navigate(categoryAddUrl())}
         onRowClick={id => () => navigate(categoryUrl(id))}
+        onSort={handleSort}
         disabled={loading}
         onNextPage={loadNextPage}
         onPreviousPage={loadPreviousPage}

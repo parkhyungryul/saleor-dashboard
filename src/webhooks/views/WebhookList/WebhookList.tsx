@@ -17,9 +17,9 @@ import { WebhookDelete } from "@saleor/webhooks/types/WebhookDelete";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import WebhooksListPage from "../components/WebhooksListPage/WebhooksListPage";
-import { TypedWebhookDelete } from "../mutations";
-import { TypedWebhooksListQuery } from "../queries";
+import WebhooksListPage from "../../components/WebhooksListPage/WebhooksListPage";
+import { TypedWebhookDelete } from "../../mutations";
+import { TypedWebhooksListQuery } from "../../queries";
 import {
   WebhookListUrlDialog,
   WebhookListUrlFilters,
@@ -27,7 +27,7 @@ import {
   webhooksListUrl,
   WebhooksListUrlQueryParams,
   webhooksUrl
-} from "../urls";
+} from "../../urls";
 import {
   areFiltersApplied,
   deleteFilterTab,

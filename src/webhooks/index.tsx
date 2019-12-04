@@ -13,7 +13,7 @@ import {
 } from "./urls";
 import WebhookCreate from "./views/WebhooksCreate";
 import WebhooksDetails from "./views/WebhooksDetails";
-import WebhooksList from "./views/WebhooksList";
+import WebhooksList from "./views/WebhookList";
 
 const WebhookList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));

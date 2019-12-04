@@ -25,7 +25,10 @@ const CategoryDetails: React.FC<
   RouteComponentProps<CategoryDetailsRouteParams>
 > = ({ location, match }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: CategoryUrlQueryParams = qs;
+  const params: CategoryUrlQueryParams = {
+    ...qs,
+    activeTab: getActiveTab(qs.activeTab)
+  };
 
   return (
     <CategoryDetailsView
@@ -49,12 +52,7 @@ const CategoryCreate: React.FC<
 const CategoryList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: CategoryListUrlQueryParams = {
-    ...asSortParams(
-      qs,
-      CategoryListUrlSortField,
-      CategoryListUrlSortField.name
-    ),
-    activeTab: getActiveTab(qs.activeTab)
+    ...asSortParams(qs, CategoryListUrlSortField, CategoryListUrlSortField.name)
   };
 
   return <CategoryListComponent params={params} />;

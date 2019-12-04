@@ -92,24 +92,28 @@ const CategoryList: React.FC<CategoryListProps> = props => {
       >
         <TableCellHeader
           direction={
-            sort.sort === CategoryListUrlSortField.name
+            isRoot && sort.sort === CategoryListUrlSortField.name
               ? getArrowDirection(sort.asc)
               : undefined
           }
           arrowPosition="right"
           className={classes.colName}
-          onClick={() => onSort(CategoryListUrlSortField.name)}
+          disableClick={!isRoot}
+          onClick={() => isRoot && onSort(CategoryListUrlSortField.name)}
         >
           <FormattedMessage defaultMessage="Category Name" />
         </TableCellHeader>
         <TableCellHeader
           direction={
-            sort.sort === CategoryListUrlSortField.subcategoryCount
+            isRoot && sort.sort === CategoryListUrlSortField.subcategoryCount
               ? getArrowDirection(sort.asc)
               : undefined
           }
           className={classes.colSubcategories}
-          onClick={() => onSort(CategoryListUrlSortField.subcategoryCount)}
+          disableClick={!isRoot}
+          onClick={() =>
+            isRoot && onSort(CategoryListUrlSortField.subcategoryCount)
+          }
         >
           <FormattedMessage
             defaultMessage="Subcategories"
@@ -118,12 +122,15 @@ const CategoryList: React.FC<CategoryListProps> = props => {
         </TableCellHeader>
         <TableCellHeader
           direction={
-            sort.sort === CategoryListUrlSortField.productCount
+            isRoot && sort.sort === CategoryListUrlSortField.productCount
               ? getArrowDirection(sort.asc)
               : undefined
           }
           className={classes.colProducts}
-          onClick={() => onSort(CategoryListUrlSortField.productCount)}
+          disableClick={!isRoot}
+          onClick={() =>
+            isRoot && onSort(CategoryListUrlSortField.productCount)
+          }
         >
           <FormattedMessage
             defaultMessage="No. of Products"

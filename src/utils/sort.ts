@@ -40,7 +40,7 @@ export function getSortParams<
 
 export function asSortParams<
   TParams extends Record<any, string>,
-  TFields extends Record<any, string>
+  TFields extends Record<any, string> & { name: string }
 >(
   params: TParams,
   fields: TFields,

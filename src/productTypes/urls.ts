@@ -21,7 +21,8 @@ export enum ProductTypeListUrlFiltersEnum {
 export type ProductTypeListUrlFilters = Filters<ProductTypeListUrlFiltersEnum>;
 export type ProductTypeListUrlDialog = "remove" | TabActionDialog;
 export enum ProductTypeListUrlSortField {
-  name = "name"
+  name = "name",
+  digital = "digital"
 }
 export type ProductTypeListUrlSort = Sort<ProductTypeListUrlSortField>;
 export type ProductTypeListUrlQueryParams = ActiveTab &

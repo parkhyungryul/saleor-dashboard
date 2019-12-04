@@ -14,14 +14,8 @@ export function getSortQueryField(
   switch (sort) {
     case ProductTypeListUrlSortField.name:
       return ProductTypeSortField.NAME;
-    case ProductTypeListUrlSortField.slug:
-      return ProductTypeSortField.SLUG;
-    case ProductTypeListUrlSortField.searchable:
-      return ProductTypeSortField.FILTERABLE_IN_DASHBOARD;
-    case ProductTypeListUrlSortField.useInFacetedSearch:
-      return ProductTypeSortField.FILTERABLE_IN_STOREFRONT;
-    case ProductTypeListUrlSortField.visible:
-      return ProductTypeSortField.VISIBLE_IN_STOREFRONT;
+    case ProductTypeListUrlSortField.digital:
+      return ProductTypeSortField.DIGITAL;
     default:
       return undefined;
   }

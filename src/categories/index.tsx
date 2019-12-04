@@ -4,13 +4,15 @@ import { useIntl } from "react-intl";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { sectionNames } from "@saleor/intl";
+import { asSortParams } from "@saleor/utils/sort";
 import { WindowTitle } from "../components/WindowTitle";
 import {
   categoryAddPath,
   categoryListPath,
   CategoryListUrlQueryParams,
   categoryPath,
-  CategoryUrlQueryParams
+  CategoryUrlQueryParams,
+  CategoryListUrlSortField
 } from "./urls";
 import { CategoryCreateView } from "./views/CategoryCreate";
 import CategoryDetailsView, { getActiveTab } from "./views/CategoryDetails";
@@ -23,10 +25,8 @@ const CategoryDetails: React.FC<
   RouteComponentProps<CategoryDetailsRouteParams>
 > = ({ location, match }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: CategoryUrlQueryParams = {
-    ...qs,
-    activeTab: getActiveTab(qs.activeTab)
-  };
+  const params: CategoryUrlQueryParams = qs;
+
   return (
     <CategoryDetailsView
       id={decodeURIComponent(match.params.id)}
@@ -48,7 +48,15 @@ const CategoryCreate: React.FC<
 
 const CategoryList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: CategoryListUrlQueryParams = qs;
+  const params: CategoryListUrlQueryParams = {
+    ...asSortParams(
+      qs,
+      CategoryListUrlSortField,
+      CategoryListUrlSortField.name
+    ),
+    activeTab: getActiveTab(qs.activeTab)
+  };
+
   return <CategoryListComponent params={params} />;
 };
 

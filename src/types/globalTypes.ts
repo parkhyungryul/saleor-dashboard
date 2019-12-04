@@ -47,6 +47,12 @@ export enum AuthorizationKeyType {
   GOOGLE_OAUTH2 = "GOOGLE_OAUTH2",
 }
 
+export enum CategorySortField {
+  NAME = "NAME",
+  PRODUCT_COUNT = "PRODUCT_COUNT",
+  SUBCATEGORY_COUNT = "SUBCATEGORY_COUNT",
+}
+
 export enum CollectionPublished {
   HIDDEN = "HIDDEN",
   PUBLISHED = "PUBLISHED",
@@ -683,6 +689,11 @@ export interface CategoryInput {
   seo?: SeoInput | null;
   backgroundImage?: any | null;
   backgroundImageAlt?: string | null;
+}
+
+export interface CategorySortingInput {
+  direction: OrderDirection;
+  field?: CategorySortField | null;
 }
 
 export interface CollectionCreateInput {

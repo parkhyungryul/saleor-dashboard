@@ -37,6 +37,7 @@ import {
   getFilterVariables,
   saveFilterTab
 } from "./filter";
+import { getSortQueryVariables } from "./sort";
 
 interface CategoryListProps {
   params: CategoryListUrlQueryParams;
@@ -57,7 +58,8 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
   const queryVariables = React.useMemo(
     () => ({
       ...paginationState,
-      filter: getFilterVariables(params)
+      filter: getFilterVariables(params),
+      sort: getSortQueryVariables(params)
     }),
     [params]
   );

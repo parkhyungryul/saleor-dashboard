@@ -24,19 +24,19 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colFaceted: {
-        width: 150
+        width: 180
       },
       colName: {
         width: "auto"
       },
       colSearchable: {
-        width: 150
+        width: 180
       },
       colSlug: {
         width: 200
       },
       colVisible: {
-        width: 150
+        width: 180
       }
     },
     colFaceted: {

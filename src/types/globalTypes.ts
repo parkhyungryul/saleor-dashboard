@@ -16,6 +16,20 @@ export enum AttributeInputTypeEnum {
   MULTISELECT = "MULTISELECT",
 }
 
+export enum AttributeSortField {
+  AVAILABLE_IN_GRID = "AVAILABLE_IN_GRID",
+  DASHBOARD_PRODUCT_POSITION = "DASHBOARD_PRODUCT_POSITION",
+  DASHBOARD_VARIANT_POSITION = "DASHBOARD_VARIANT_POSITION",
+  FILTERABLE_IN_DASHBOARD = "FILTERABLE_IN_DASHBOARD",
+  FILTERABLE_IN_STOREFRONT = "FILTERABLE_IN_STOREFRONT",
+  IS_VARIANT_ONLY = "IS_VARIANT_ONLY",
+  NAME = "NAME",
+  SLUG = "SLUG",
+  STOREFRONT_SEARCH_POSITION = "STOREFRONT_SEARCH_POSITION",
+  VALUE_REQUIRED = "VALUE_REQUIRED",
+  VISIBLE_IN_STOREFRONT = "VISIBLE_IN_STOREFRONT",
+}
+
 export enum AttributeTypeEnum {
   PRODUCT = "PRODUCT",
   VARIANT = "VARIANT",
@@ -618,6 +632,11 @@ export interface AttributeInput {
   value: string;
 }
 
+export interface AttributeSortingInput {
+  direction: OrderDirection;
+  field?: AttributeSortField | null;
+}
+
 export interface AttributeUpdateInput {
   name?: string | null;
   slug?: string | null;
@@ -881,9 +900,9 @@ export interface ProductFilterInput {
 }
 
 export interface ProductOrder {
-  field?: ProductOrderField | null;
-  attributeId?: string | null;
   direction: OrderDirection;
+  attributeId?: string | null;
+  field?: ProductOrderField | null;
 }
 
 export interface ProductTypeFilterInput {

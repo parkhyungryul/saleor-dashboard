@@ -4,6 +4,7 @@ import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { sectionNames } from "@saleor/intl";
 import { useIntl } from "react-intl";
+import { parseBoolean, findInEnum } from "@saleor/misc";
 import { WindowTitle } from "../components/WindowTitle";
 import {
   attributeAddPath,
@@ -11,7 +12,8 @@ import {
   attributeListPath,
   AttributeListUrlQueryParams,
   attributePath,
-  AttributeUrlQueryParams
+  AttributeUrlQueryParams,
+  AttributeListUrlSortField
 } from "./urls";
 import AttributeCreateComponent from "./views/AttributeCreate";
 import AttributeDetailsComponent from "./views/AttributeDetails";
@@ -19,7 +21,13 @@ import AttributeListComponent from "./views/AttributeList";
 
 const AttributeList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: AttributeListUrlQueryParams = qs;
+  const params: AttributeListUrlQueryParams = {
+    ...qs,
+    asc: parseBoolean(qs.asc),
+    sort: qs.sort
+      ? findInEnum(qs.sort, AttributeListUrlSortField)
+      : AttributeListUrlSortField.name
+  };
   return <AttributeListComponent params={params} />;
 };
 

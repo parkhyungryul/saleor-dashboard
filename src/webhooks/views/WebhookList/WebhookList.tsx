@@ -17,17 +17,20 @@ import { WebhookDelete } from "@saleor/webhooks/types/WebhookDelete";
 import React from "react";
 import { useIntl } from "react-intl";
 
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import WebhooksListPage from "../../components/WebhooksListPage/WebhooksListPage";
 import { TypedWebhookDelete } from "../../mutations";
-import { TypedWebhooksListQuery } from "../../queries";
+import { useWebhooksListQuery } from "../../queries";
 import {
   WebhookListUrlDialog,
   WebhookListUrlFilters,
   webhooksAddUrl,
   webhooksListUrl,
-  WebhooksListUrlQueryParams,
-  webhooksUrl
+  WebhookListUrlQueryParams,
+  webhooksUrl,
+  WebhookListUrlSortField
 } from "../../urls";
+import { getSortQueryVariables } from "./sort";
 import {
   areFiltersApplied,
   deleteFilterTab,
@@ -38,7 +41,7 @@ import {
 } from "./filter";
 
 interface WebhooksListProps {
-  params: WebhooksListUrlQueryParams;
+  params: WebhookListUrlQueryParams;
 }
 
 export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
@@ -49,6 +52,21 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
   const { updateListSettings, settings } = useListSettings(
     ListViews.WEBHOOK_LIST
   );
+
+  const paginationState = createPaginationState(settings.rowNumber, params);
+  const queryVariables = React.useMemo(
+    () => ({
+      ...paginationState,
+      filter: getFilterVariables(params),
+      sort: getSortQueryVariables(params)
+    }),
+    [params]
+  );
+  const { data, loading, refetch } = useWebhooksListQuery({
+    displayLoader: true,
+    variables: queryVariables
+  });
+
   const tabs = getFilterTabs();
 
   const currentTab =
@@ -104,116 +122,109 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
     handleTabChange(tabs.length + 1);
   };
 
-  const paginationState = createPaginationState(settings.rowNumber, params);
-  const queryVariables = React.useMemo(
-    () => ({
-      ...paginationState,
-      filter: getFilterVariables(params)
-    }),
-    [params]
-  );
+  const onWebhookDelete = (data: WebhookDelete) => {
+    if (data.webhookDelete.errors.length === 0) {
+      notify({
+        text: intl.formatMessage(commonMessages.savedChanges)
+      });
+      navigate(webhooksListUrl());
+      refetch();
+    }
+  };
+
+  const handleSort = (field: WebhookListUrlSortField) =>
+    navigate(
+      webhooksListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
 
   return (
-    <TypedWebhooksListQuery displayLoader variables={queryVariables}>
-      {({ data, loading, refetch }) => {
-        const onWebhookDelete = (data: WebhookDelete) => {
-          if (data.webhookDelete.errors.length === 0) {
-            notify({
-              text: intl.formatMessage(commonMessages.savedChanges)
-            });
-            navigate(webhooksListUrl());
-            refetch();
-          }
+    <TypedWebhookDelete onCompleted={onWebhookDelete}>
+      {(webhookDelete, webhookDeleteOpts) => {
+        const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
+          maybe(() => data.webhooks.pageInfo),
+          paginationState,
+          params
+        );
+        const handleRemove = (id: string) => {
+          navigate(
+            webhooksListUrl({
+              ...params,
+              action: "remove",
+              id
+            })
+          );
         };
+        const handleRemoveConfirm = () => {
+          webhookDelete({
+            variables: {
+              id: params.id
+            }
+          });
+        };
+
+        const deleteTransitionState = getMutationState(
+          webhookDeleteOpts.called,
+          webhookDeleteOpts.loading,
+          maybe(() => webhookDeleteOpts.data.webhookDelete.errors)
+        );
+
         return (
-          <TypedWebhookDelete onCompleted={onWebhookDelete}>
-            {(webhookDelete, webhookDeleteOpts) => {
-              const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-                maybe(() => data.webhooks.pageInfo),
-                paginationState,
-                params
-              );
-              const handleRemove = (id: string) => {
-                navigate(
-                  webhooksListUrl({
-                    ...params,
-                    action: "remove",
-                    id
-                  })
-                );
-              };
-              const handleRemoveConfirm = () => {
-                webhookDelete({
-                  variables: {
-                    id: params.id
-                  }
-                });
-              };
-
-              const deleteTransitionState = getMutationState(
-                webhookDeleteOpts.called,
-                webhookDeleteOpts.loading,
-                maybe(() => webhookDeleteOpts.data.webhookDelete.errors)
-              );
-
-              return (
-                <>
-                  <WebhooksListPage
-                    currentTab={currentTab}
-                    initialSearch={params.query || ""}
-                    onSearchChange={query => changeFilterField({ query })}
-                    onAll={() => navigate(webhooksListUrl())}
-                    onTabChange={handleTabChange}
-                    onTabDelete={() => openModal("delete-search")}
-                    onTabSave={() => openModal("save-search")}
-                    tabs={tabs.map(tab => tab.name)}
-                    disabled={loading}
-                    settings={settings}
-                    webhooks={maybe(() =>
-                      data.webhooks.edges.map(edge => edge.node)
-                    )}
-                    pageInfo={pageInfo}
-                    onAdd={() => navigate(webhooksAddUrl)}
-                    onBack={() => navigate(configurationMenuUrl)}
-                    onNextPage={loadNextPage}
-                    onPreviousPage={loadPreviousPage}
-                    onRemove={handleRemove}
-                    onUpdateListSettings={updateListSettings}
-                    onRowClick={id => () => navigate(webhooksUrl(id))}
-                  />
-                  <WebhookDeleteDialog
-                    confirmButtonState={deleteTransitionState}
-                    name={maybe(
-                      () =>
-                        data.webhooks.edges.find(
-                          edge => edge.node.id === params.id
-                        ).node.name,
-                      "..."
-                    )}
-                    onClose={closeModal}
-                    onConfirm={handleRemoveConfirm}
-                    open={params.action === "remove"}
-                  />
-                  <SaveFilterTabDialog
-                    open={params.action === "save-search"}
-                    confirmButtonState="default"
-                    onClose={closeModal}
-                    onSubmit={handleTabSave}
-                  />
-                  <DeleteFilterTabDialog
-                    open={params.action === "delete-search"}
-                    confirmButtonState="default"
-                    onClose={closeModal}
-                    onSubmit={handleTabDelete}
-                    tabName={maybe(() => tabs[currentTab - 1].name, "...")}
-                  />
-                </>
-              );
-            }}
-          </TypedWebhookDelete>
+          <>
+            <WebhooksListPage
+              currentTab={currentTab}
+              initialSearch={params.query || ""}
+              onSearchChange={query => changeFilterField({ query })}
+              onAll={() => navigate(webhooksListUrl())}
+              onTabChange={handleTabChange}
+              onTabDelete={() => openModal("delete-search")}
+              onTabSave={() => openModal("save-search")}
+              tabs={tabs.map(tab => tab.name)}
+              disabled={loading}
+              settings={settings}
+              sort={getSortParams(params)}
+              webhooks={maybe(() => data.webhooks.edges.map(edge => edge.node))}
+              pageInfo={pageInfo}
+              onAdd={() => navigate(webhooksAddUrl)}
+              onBack={() => navigate(configurationMenuUrl)}
+              onNextPage={loadNextPage}
+              onPreviousPage={loadPreviousPage}
+              onRemove={handleRemove}
+              onSort={handleSort}
+              onUpdateListSettings={updateListSettings}
+              onRowClick={id => () => navigate(webhooksUrl(id))}
+            />
+            <WebhookDeleteDialog
+              confirmButtonState={deleteTransitionState}
+              name={maybe(
+                () =>
+                  data.webhooks.edges.find(edge => edge.node.id === params.id)
+                    .node.name,
+                "..."
+              )}
+              onClose={closeModal}
+              onConfirm={handleRemoveConfirm}
+              open={params.action === "remove"}
+            />
+            <SaveFilterTabDialog
+              open={params.action === "save-search"}
+              confirmButtonState="default"
+              onClose={closeModal}
+              onSubmit={handleTabSave}
+            />
+            <DeleteFilterTabDialog
+              open={params.action === "delete-search"}
+              confirmButtonState="default"
+              onClose={closeModal}
+              onSubmit={handleTabDelete}
+              tabName={maybe(() => tabs[currentTab - 1].name, "...")}
+            />
+          </>
         );
       }}
-    </TypedWebhooksListQuery>
+    </TypedWebhookDelete>
   );
 };
 

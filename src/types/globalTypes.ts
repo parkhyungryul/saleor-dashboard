@@ -592,6 +592,12 @@ export enum WebhookEventTypeEnum {
   PRODUCT_CREATED = "PRODUCT_CREATED",
 }
 
+export enum WebhooksSortField {
+  NAME = "NAME",
+  SERVICE_ACCOUNT = "SERVICE_ACCOUNT",
+  TARGET_URL = "TARGET_URL",
+}
+
 export enum WeightUnitsEnum {
   G = "G",
   KG = "KG",
@@ -1161,6 +1167,11 @@ export interface WebhookUpdateInput {
   serviceAccount?: string | null;
   isActive?: boolean | null;
   secretKey?: string | null;
+}
+
+export interface WebhooksSortingInput {
+  direction: OrderDirection;
+  field?: WebhooksSortField | null;
 }
 
 //==============================================================

@@ -1,3 +1,4 @@
+import { parseBoolean, findValueInEnum } from "@saleor/misc";
 import { TableCellHeaderArrowDirection } from "../components/TableCellHeader";
 import { Sort } from "../types";
 import { OrderDirection } from "../types/globalTypes";
@@ -34,5 +35,20 @@ export function getSortParams<
   return {
     asc: params.asc,
     sort: params.sort
+  };
+}
+
+export function asSortParams<
+  TParams extends Record<any, string>,
+  TFields extends Record<any, string>
+>(
+  params: TParams,
+  fields: TFields,
+  defaultField: keyof TFields
+): TParams & Sort {
+  return {
+    ...params,
+    asc: parseBoolean(params.asc),
+    sort: params.sort ? findValueInEnum(params.sort, fields) : defaultField
   };
 }

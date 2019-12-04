@@ -474,6 +474,11 @@ export enum PermissionEnum {
   MANAGE_WEBHOOKS = "MANAGE_WEBHOOKS",
 }
 
+export enum PluginSortField {
+  IS_ACTIVE = "IS_ACTIVE",
+  NAME = "NAME",
+}
+
 export enum ProductErrorCode {
   ALREADY_EXISTS = "ALREADY_EXISTS",
   ATTRIBUTE_ALREADY_ASSIGNED = "ATTRIBUTE_ALREADY_ASSIGNED",
@@ -908,6 +913,11 @@ export interface PageTranslationInput {
   title?: string | null;
   content?: string | null;
   contentJson?: any | null;
+}
+
+export interface PluginSortingInput {
+  direction: OrderDirection;
+  field?: PluginSortField | null;
 }
 
 export interface PluginUpdateInput {

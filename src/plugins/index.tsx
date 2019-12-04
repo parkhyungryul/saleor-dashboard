@@ -4,19 +4,24 @@ import { useIntl } from "react-intl";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { sectionNames } from "@saleor/intl";
+import { asSortParams } from "@saleor/utils/sort";
 import { WindowTitle } from "../components/WindowTitle";
 import {
   pluginListPath,
   PluginListUrlQueryParams,
   pluginPath,
-  PluginUrlQueryParams
+  PluginUrlQueryParams,
+  PluginListUrlSortField
 } from "./urls";
 import PluginsDetailsComponent from "./views/PluginsDetails";
 import PluginsListComponent from "./views/PluginList";
 
 const PluginList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: PluginListUrlQueryParams = qs;
+  const params: PluginListUrlQueryParams = asSortParams(
+    qs,
+    PluginListUrlSortField
+  );
   return <PluginsListComponent params={params} />;
 };
 

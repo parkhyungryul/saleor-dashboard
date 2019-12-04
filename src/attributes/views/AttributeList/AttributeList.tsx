@@ -21,6 +21,7 @@ import useNotifier from "@saleor/hooks/useNotifier";
 import usePaginator, {
   createPaginationState
 } from "@saleor/hooks/usePaginator";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import { PAGINATE_BY } from "../../../config";
 import useBulkActions from "../../../hooks/useBulkActions";
 import { getMutationState, maybe } from "../../../misc";
@@ -35,7 +36,8 @@ import {
   AttributeListUrlDialog,
   AttributeListUrlFilters,
   AttributeListUrlQueryParams,
-  attributeUrl
+  attributeUrl,
+  AttributeListUrlSortField
 } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
@@ -145,6 +147,14 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: AttributeListUrlSortField) =>
+    navigate(
+      attributeListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <AttributeBulkDeleteMutation onCompleted={handleBulkDelete}>
       {(attributeBulkDelete, attributeBulkDeleteOpts) => {
@@ -170,12 +180,14 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
               onNextPage={loadNextPage}
               onPreviousPage={loadPreviousPage}
               onRowClick={id => () => navigate(attributeUrl(id))}
+              onSort={handleSort}
               onSearchChange={query => changeFilterField({ query })}
               onTabChange={handleTabChange}
               onTabDelete={() => openModal("delete-search")}
               onTabSave={() => openModal("save-search")}
               pageInfo={pageInfo}
               selected={listElements.length}
+              sort={getSortParams(params)}
               tabs={tabs.map(tab => tab.name)}
               toggle={toggle}
               toggleAll={toggleAll}

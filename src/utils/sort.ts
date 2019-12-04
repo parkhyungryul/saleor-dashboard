@@ -26,3 +26,13 @@ export function getOrderDirection(asc: boolean): OrderDirection {
 export function getArrowDirection(asc: boolean): TableCellHeaderArrowDirection {
   return asc ? "asc" : "desc";
 }
+
+export function getSortParams<
+  TParams extends Sort<TFields>,
+  TFields extends string
+>(params: TParams): Sort<TFields> {
+  return {
+    asc: params.asc,
+    sort: params.sort
+  };
+}

@@ -58,6 +58,12 @@ export enum CollectionPublished {
   PUBLISHED = "PUBLISHED",
 }
 
+export enum CollectionSortField {
+  AVAILABILITY = "AVAILABILITY",
+  NAME = "NAME",
+  PRODUCT_COUNT = "PRODUCT_COUNT",
+}
+
 export enum ConfigurationTypeFieldEnum {
   BOOLEAN = "BOOLEAN",
   PASSWORD = "PASSWORD",
@@ -724,6 +730,11 @@ export interface CollectionInput {
   backgroundImageAlt?: string | null;
   seo?: SeoInput | null;
   publicationDate?: any | null;
+}
+
+export interface CollectionSortingInput {
+  direction: OrderDirection;
+  field?: CollectionSortField | null;
 }
 
 export interface ConfigurationItemInput {

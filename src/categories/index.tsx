@@ -52,7 +52,7 @@ const CategoryCreate: React.FC<
 const CategoryList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: CategoryListUrlQueryParams = {
-    ...asSortParams(qs, CategoryListUrlSortField, CategoryListUrlSortField.name)
+    ...asSortParams(qs, CategoryListUrlSortField)
   };
 
   return <CategoryListComponent params={params} />;

@@ -21,8 +21,7 @@ const WebhookList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: WebhookListUrlQueryParams = asSortParams(
     qs,
-    WebhookListUrlSortField,
-    WebhookListUrlSortField.name
+    WebhookListUrlSortField
   );
 
   return <WebhooksList params={params} />;

@@ -40,15 +40,17 @@ export function getSortParams<
 
 export function asSortParams<
   TParams extends Record<any, string>,
-  TFields extends Record<any, string> & { name: string }
+  TFields extends Record<any, string>
 >(
   params: TParams,
   fields: TFields,
-  defaultField: keyof TFields
+  defaultField?: keyof TFields
 ): TParams & Sort {
   return {
     ...params,
     asc: parseBoolean(params.asc),
-    sort: params.sort ? findValueInEnum(params.sort, fields) : defaultField
+    sort: params.sort
+      ? findValueInEnum(params.sort, fields)
+      : defaultField || "name"
   };
 }

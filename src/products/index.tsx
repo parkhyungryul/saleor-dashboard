@@ -30,8 +30,7 @@ const ProductList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: ProductListUrlQueryParams = asSortParams(
     qs,
-    ProductListUrlSortField,
-    ProductListUrlSortField.name
+    ProductListUrlSortField
   );
 
   return <ProductListComponent params={params} />;

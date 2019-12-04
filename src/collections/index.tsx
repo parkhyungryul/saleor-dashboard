@@ -22,8 +22,7 @@ const CollectionList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: CollectionListUrlQueryParams = asSortParams(
     qs,
-    CollectionListUrlSortField,
-    CollectionListUrlSortField.name
+    CollectionListUrlSortField
   );
   return <CollectionListView params={params} />;
 };

@@ -23,8 +23,7 @@ const AttributeList: React.FC<RouteComponentProps<{}>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
   const params: AttributeListUrlQueryParams = asSortParams(
     qs,
-    AttributeListUrlSortField,
-    AttributeListUrlSortField.name
+    AttributeListUrlSortField
   );
 
   return <AttributeListComponent params={params} />;

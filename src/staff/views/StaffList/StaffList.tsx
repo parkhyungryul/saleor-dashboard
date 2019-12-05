@@ -20,6 +20,7 @@ import useShop from "@saleor/hooks/useShop";
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import StaffAddMemberDialog, {
   FormData as AddStaffMemberForm
 } from "../../components/StaffAddMemberDialog";
@@ -32,7 +33,8 @@ import {
   StaffListUrlDialog,
   StaffListUrlFilters,
   StaffListUrlQueryParams,
-  staffMemberDetailsUrl
+  staffMemberDetailsUrl,
+  StaffListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -171,6 +173,14 @@ export const StaffList: React.FC<StaffListProps> = ({ params }) => {
           params
         );
 
+        const handleSort = (field: StaffListUrlSortField) =>
+          navigate(
+            staffListUrl({
+              ...params,
+              ...getSortUrlVariables(field, params)
+            })
+          );
+
         return (
           <>
             <StaffListPage
@@ -185,6 +195,7 @@ export const StaffList: React.FC<StaffListProps> = ({ params }) => {
               disabled={loading || addStaffMemberData.loading}
               settings={settings}
               pageInfo={pageInfo}
+              sort={getSortParams(params)}
               staffMembers={maybe(() =>
                 data.staffUsers.edges.map(edge => edge.node)
               )}
@@ -200,6 +211,7 @@ export const StaffList: React.FC<StaffListProps> = ({ params }) => {
               onPreviousPage={loadPreviousPage}
               onUpdateListSettings={updateListSettings}
               onRowClick={id => () => navigate(staffMemberDetailsUrl(id))}
+              onSort={handleSort}
             />
             <StaffAddMemberDialog
               confirmButtonState={addTransitionState}

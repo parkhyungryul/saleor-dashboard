@@ -3,19 +3,19 @@ import {
   WebhookListUrlSortField
 } from "@saleor/webhooks/urls";
 import {
-  WebhooksSortingInput,
-  WebhooksSortField
+  WebhookSortingInput,
+  WebhookSortField
 } from "@saleor/types/globalTypes";
 import { getOrderDirection } from "@saleor/utils/sort";
 
 export function getSortQueryField(
   sort: WebhookListUrlSortField
-): WebhooksSortField {
+): WebhookSortField {
   switch (sort) {
     case WebhookListUrlSortField.name:
-      return WebhooksSortField.NAME;
+      return WebhookSortField.NAME;
     case WebhookListUrlSortField.serviceAccount:
-      return WebhooksSortField.SERVICE_ACCOUNT;
+      return WebhookSortField.SERVICE_ACCOUNT;
     default:
       return undefined;
   }
@@ -23,7 +23,7 @@ export function getSortQueryField(
 
 export function getSortQueryVariables(
   params: WebhookListUrlQueryParams
-): WebhooksSortingInput {
+): WebhookSortingInput {
   return {
     direction: getOrderDirection(params.asc),
     field: getSortQueryField(params.sort)

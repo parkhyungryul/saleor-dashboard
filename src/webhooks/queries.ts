@@ -35,7 +35,7 @@ const webhooksList = gql`
     $last: Int
     $before: String
     $filter: WebhookFilterInput
-    $sort: WebhooksSortingInput
+    $sort: WebhookSortingInput
   ) {
     webhooks(
       first: $first

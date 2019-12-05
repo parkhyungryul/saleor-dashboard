@@ -614,7 +614,7 @@ export enum WebhookEventTypeEnum {
   PRODUCT_CREATED = "PRODUCT_CREATED",
 }
 
-export enum WebhooksSortField {
+export enum WebhookSortField {
   NAME = "NAME",
   SERVICE_ACCOUNT = "SERVICE_ACCOUNT",
   TARGET_URL = "TARGET_URL",
@@ -1197,6 +1197,11 @@ export interface WebhookFilterInput {
   isActive?: boolean | null;
 }
 
+export interface WebhookSortingInput {
+  direction: OrderDirection;
+  field?: WebhookSortField | null;
+}
+
 export interface WebhookUpdateInput {
   name?: string | null;
   targetUrl?: string | null;
@@ -1204,11 +1209,6 @@ export interface WebhookUpdateInput {
   serviceAccount?: string | null;
   isActive?: boolean | null;
   secretKey?: string | null;
-}
-
-export interface WebhooksSortingInput {
-  direction: OrderDirection;
-  field?: WebhooksSortField | null;
 }
 
 //==============================================================

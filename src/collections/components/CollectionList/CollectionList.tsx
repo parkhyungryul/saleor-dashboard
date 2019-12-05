@@ -95,7 +95,7 @@ const CollectionList: React.FC<CollectionListProps> = props => {
           onClick={() => onSort(CollectionListUrlSortField.name)}
           className={classes.colName}
         >
-          <FormattedMessage defaultMessage="Category Name" />
+          <FormattedMessage defaultMessage="Collection Name" />
         </TableCellHeader>
         <TableCellHeader
           direction={

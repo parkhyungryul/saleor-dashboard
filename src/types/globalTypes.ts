@@ -518,6 +518,14 @@ export enum ProductTypeSortField {
   SHIPPING_REQUIRED = "SHIPPING_REQUIRED",
 }
 
+export enum SaleSortField {
+  END_DATE = "END_DATE",
+  NAME = "NAME",
+  START_DATE = "START_DATE",
+  TYPE = "TYPE",
+  VALUE = "VALUE",
+}
+
 export enum SaleType {
   FIXED = "FIXED",
   PERCENTAGE = "PERCENTAGE",
@@ -570,6 +578,15 @@ export enum VoucherDiscountType {
   FIXED = "FIXED",
   PERCENTAGE = "PERCENTAGE",
   SHIPPING = "SHIPPING",
+}
+
+export enum VoucherSortField {
+  END_DATE = "END_DATE",
+  NAME = "NAME",
+  START_DATE = "START_DATE",
+  TYPE = "TYPE",
+  USAGE_LIMIT = "USAGE_LIMIT",
+  VALUE = "VALUE",
 }
 
 export enum VoucherTypeEnum {
@@ -1025,6 +1042,11 @@ export interface SaleInput {
   endDate?: any | null;
 }
 
+export interface SaleSortingInput {
+  direction: OrderDirection;
+  field?: SaleSortField | null;
+}
+
 export interface SeoInput {
   title?: string | null;
   description?: string | null;
@@ -1154,6 +1176,11 @@ export interface VoucherInput {
   applyOncePerOrder?: boolean | null;
   applyOncePerCustomer?: boolean | null;
   usageLimit?: number | null;
+}
+
+export interface VoucherSortingInput {
+  direction: OrderDirection;
+  field?: VoucherSortField | null;
 }
 
 export interface WebhookCreateInput {

@@ -4483,12 +4483,13 @@ type VoucherRemoveCatalogues {
 }
 
 enum VoucherSortField {
-  NAME
+  CODE
   START_DATE
   END_DATE
   VALUE
   TYPE
   USAGE_LIMIT
+  MINIMUM_SPENT_AMOUNT
 }
 
 input VoucherSortingInput {

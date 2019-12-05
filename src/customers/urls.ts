@@ -22,7 +22,8 @@ export type CustomerListUrlFilters = Filters<CustomerListUrlFiltersEnum>;
 export type CustomerListUrlDialog = "remove" | TabActionDialog;
 export enum CustomerListUrlSortField {
   name = "name",
-  email = "email"
+  email = "email",
+  orders = "orders"
 }
 export type CustomerListUrlSort = Sort<CustomerListUrlSortField>;
 export type CustomerListUrlQueryParams = ActiveTab &

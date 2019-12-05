@@ -19,6 +19,7 @@ import usePaginator, {
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
 import CustomerListPage from "../../components/CustomerListPage";
 import { TypedBulkRemoveCustomers } from "../../mutations";
 import { useCustomerListQuery } from "../../queries";
@@ -29,7 +30,8 @@ import {
   CustomerListUrlDialog,
   CustomerListUrlFilters,
   CustomerListUrlQueryParams,
-  customerUrl
+  customerUrl,
+  CustomerListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -148,6 +150,14 @@ export const CustomerList: React.FC<CustomerListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: CustomerListUrlSortField) =>
+    navigate(
+      customerListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <TypedBulkRemoveCustomers onCompleted={handleBulkCustomerDelete}>
       {(bulkRemoveCustomers, bulkRemoveCustomersOpts) => {
@@ -179,6 +189,8 @@ export const CustomerList: React.FC<CustomerListProps> = ({ params }) => {
               onPreviousPage={loadPreviousPage}
               onUpdateListSettings={updateListSettings}
               onRowClick={id => () => navigate(customerUrl(id))}
+              onSort={handleSort}
+              sort={getSortParams(params)}
               toolbar={
                 <IconButton
                   color="primary"

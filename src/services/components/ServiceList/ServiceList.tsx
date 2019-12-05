@@ -37,7 +37,7 @@ const useStyles = makeStyles(
         paddingRight: theme.spacing(1)
       },
       textAlign: "right",
-      width: 100
+      width: 140
     },
     colName: {
       paddingLeft: 0,

@@ -2014,6 +2014,11 @@ input MenuItemMoveInput {
   sortOrder: Int
 }
 
+input MenuItemSortingInput {
+  direction: OrderDirection!
+  field: MenuItemsSortField
+}
+
 type MenuItemTranslatableContent implements Node {
   id: ID!
   name: String!
@@ -2036,6 +2041,20 @@ type MenuItemUpdate {
   errors: [Error!]
   menuErrors: [MenuError!]
   menuItem: MenuItem
+}
+
+enum MenuItemsSortField {
+  NAME
+}
+
+enum MenuSortField {
+  NAME
+  ITEMS_COUNT
+}
+
+input MenuSortingInput {
+  direction: OrderDirection!
+  field: MenuSortField
 }
 
 type MenuUpdate {
@@ -2718,6 +2737,19 @@ input PageInput {
   isPublished: Boolean
   publicationDate: String
   seo: SeoInput
+}
+
+enum PageSortField {
+  TITLE
+  SLUG
+  VISIBILITY
+  CREATION_DATE
+  PUBLICATION_DATE
+}
+
+input PageSortingInput {
+  direction: OrderDirection!
+  field: PageSortField
 }
 
 type PageTranslatableContent implements Node {
@@ -3481,7 +3513,7 @@ type ProductVariantUpdatePrivateMeta {
 
 type Query {
   webhook(id: ID!): Webhook
-  webhooks(sortBy: WebhooksSortingInput, filter: WebhookFilterInput, before: String, after: String, first: Int, last: Int): WebhookCountableConnection
+  webhooks(sortBy: WebhookSortingInput, filter: WebhookFilterInput, before: String, after: String, first: Int, last: Int): WebhookCountableConnection
   webhookEvents: [WebhookEvent]
   webhookSamplePayload(eventType: WebhookEventTypeEnum!): JSONString
   translations(kind: TranslatableKinds!, before: String, after: String, first: Int, last: Int): TranslatableItemConnection
@@ -3508,7 +3540,7 @@ type Query {
   payments(before: String, after: String, first: Int, last: Int): PaymentCountableConnection
   paymentClientToken(gateway: String!): String @deprecated(reason: "DEPRECATED: Will be removed in Saleor 2.10, use payment gateway config instead in availablePaymentGateways.")
   page(id: ID, slug: String): Page
-  pages(query: String, filter: PageFilterInput, before: String, after: String, first: Int, last: Int): PageCountableConnection
+  pages(query: String, sortBy: PageSortingInput, filter: PageFilterInput, before: String, after: String, first: Int, last: Int): PageCountableConnection
   homepageEvents(before: String, after: String, first: Int, last: Int): OrderEventCountableConnection
   order(id: ID!): Order
   orders(filter: OrderFilterInput, query: String, created: ReportingPeriod, status: OrderStatusFilter, before: String, after: String, first: Int, last: Int): OrderCountableConnection
@@ -3516,9 +3548,9 @@ type Query {
   ordersTotal(period: ReportingPeriod): TaxedMoney
   orderByToken(token: UUID!): Order
   menu(id: ID, name: String): Menu
-  menus(query: String, filter: MenuFilterInput, before: String, after: String, first: Int, last: Int): MenuCountableConnection
+  menus(query: String, sortBy: MenuSortingInput, filter: MenuFilterInput, before: String, after: String, first: Int, last: Int): MenuCountableConnection
   menuItem(id: ID!): MenuItem
-  menuItems(query: String, filter: MenuItemFilterInput, before: String, after: String, first: Int, last: Int): MenuItemCountableConnection
+  menuItems(query: String, sortBy: MenuItemSortingInput, filter: MenuItemFilterInput, before: String, after: String, first: Int, last: Int): MenuItemCountableConnection
   giftCard(id: ID!): GiftCard
   giftCards(before: String, after: String, first: Int, last: Int): GiftCardCountableConnection
   plugin(id: ID!): Plugin
@@ -4570,6 +4602,17 @@ input WebhookFilterInput {
   isActive: Boolean
 }
 
+enum WebhookSortField {
+  NAME
+  SERVICE_ACCOUNT
+  TARGET_URL
+}
+
+input WebhookSortingInput {
+  direction: OrderDirection!
+  field: WebhookSortField
+}
+
 type WebhookUpdate {
   errors: [Error!]
   webhook: Webhook
@@ -4583,17 +4626,6 @@ input WebhookUpdateInput {
   serviceAccount: ID
   isActive: Boolean
   secretKey: String
-}
-
-enum WebhooksSortField {
-  NAME
-  SERVICE_ACCOUNT
-  TARGET_URL
-}
-
-input WebhooksSortingInput {
-  direction: OrderDirection!
-  field: WebhooksSortField
 }
 
 type Weight {

@@ -16,6 +16,7 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
 import PageListPage from "../../components/PageListPage/PageListPage";
 import { TypedPageBulkPublish, TypedPageBulkRemove } from "../../mutations";
 import { usePageListQuery } from "../../queries";
@@ -26,7 +27,8 @@ import {
   pageListUrl,
   PageListUrlDialog,
   PageListUrlQueryParams,
-  pageUrl
+  pageUrl,
+  PageListUrlSortField
 } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
@@ -112,6 +114,14 @@ export const PageList: React.FC<PageListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: PageListUrlSortField) =>
+    navigate(
+      pageListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <TypedPageBulkRemove onCompleted={handlePageBulkRemove}>
       {(bulkPageRemove, bulkPageRemoveOpts) => (
@@ -142,6 +152,7 @@ export const PageList: React.FC<PageListProps> = ({ params }) => {
                   onPreviousPage={loadPreviousPage}
                   onUpdateListSettings={updateListSettings}
                   onRowClick={id => () => navigate(pageUrl(id))}
+                  onSort={handleSort}
                   toolbar={
                     <>
                       <Button
@@ -172,6 +183,7 @@ export const PageList: React.FC<PageListProps> = ({ params }) => {
                   }
                   isChecked={isSelected}
                   selected={listElements.length}
+                  sort={getSortParams(params)}
                   toggle={toggle}
                   toggleAll={toggleAll}
                 />

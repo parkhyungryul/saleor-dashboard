@@ -448,6 +448,14 @@ export enum OrderStatusFilter {
   UNFULFILLED = "UNFULFILLED",
 }
 
+export enum PageSortField {
+  CREATION_DATE = "CREATION_DATE",
+  PUBLICATION_DATE = "PUBLICATION_DATE",
+  SLUG = "SLUG",
+  TITLE = "TITLE",
+  VISIBILITY = "VISIBILITY",
+}
+
 export enum PaymentChargeStatusEnum {
   FULLY_CHARGED = "FULLY_CHARGED",
   FULLY_REFUNDED = "FULLY_REFUNDED",
@@ -922,6 +930,11 @@ export interface PageInput {
   isPublished?: boolean | null;
   publicationDate?: string | null;
   seo?: SeoInput | null;
+}
+
+export interface PageSortingInput {
+  direction: OrderDirection;
+  field?: PageSortField | null;
 }
 
 export interface PageTranslationInput {

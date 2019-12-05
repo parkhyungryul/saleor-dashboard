@@ -587,6 +587,13 @@ export enum TaxRateType {
   WINE = "WINE",
 }
 
+export enum UserSortField {
+  EMAIL = "EMAIL",
+  FIRST_NAME = "FIRST_NAME",
+  LAST_NAME = "LAST_NAME",
+  ORDER_COUNT = "ORDER_COUNT",
+}
+
 export enum VoucherDiscountType {
   FIXED = "FIXED",
   PERCENTAGE = "PERCENTAGE",
@@ -1173,6 +1180,11 @@ export interface UserCreateInput {
   note?: string | null;
   sendPasswordEmail?: boolean | null;
   redirectUrl?: string | null;
+}
+
+export interface UserSortingInput {
+  direction: OrderDirection;
+  field?: UserSortField | null;
 }
 
 export interface VoucherFilterInput {

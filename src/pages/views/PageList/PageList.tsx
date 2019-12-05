@@ -16,7 +16,8 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import PageListPage from "../../components/PageListPage/PageListPage";
 import { TypedPageBulkPublish, TypedPageBulkRemove } from "../../mutations";
 import { usePageListQuery } from "../../queries";
@@ -27,8 +28,7 @@ import {
   pageListUrl,
   PageListUrlDialog,
   PageListUrlQueryParams,
-  pageUrl,
-  PageListUrlSortField
+  pageUrl
 } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
@@ -114,13 +114,7 @@ export const PageList: React.FC<PageListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: PageListUrlSortField) =>
-    navigate(
-      pageListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, pageListUrl, params);
 
   return (
     <TypedPageBulkRemove onCompleted={handlePageBulkRemove}>

@@ -20,7 +20,8 @@ import useShop from "@saleor/hooks/useShop";
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import StaffAddMemberDialog, {
   FormData as AddStaffMemberForm
 } from "../../components/StaffAddMemberDialog";
@@ -33,8 +34,7 @@ import {
   StaffListUrlDialog,
   StaffListUrlFilters,
   StaffListUrlQueryParams,
-  staffMemberDetailsUrl,
-  StaffListUrlSortField
+  staffMemberDetailsUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -173,13 +173,7 @@ export const StaffList: React.FC<StaffListProps> = ({ params }) => {
           params
         );
 
-        const handleSort = (field: StaffListUrlSortField) =>
-          navigate(
-            staffListUrl({
-              ...params,
-              ...getSortUrlVariables(field, params)
-            })
-          );
+        const handleSort = createSortHandler(navigate, staffListUrl, params);
 
         return (
           <>

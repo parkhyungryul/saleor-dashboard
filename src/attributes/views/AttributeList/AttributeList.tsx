@@ -21,7 +21,8 @@ import useNotifier from "@saleor/hooks/useNotifier";
 import usePaginator, {
   createPaginationState
 } from "@saleor/hooks/usePaginator";
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import { PAGINATE_BY } from "../../../config";
 import useBulkActions from "../../../hooks/useBulkActions";
 import { getMutationState, maybe } from "../../../misc";
@@ -36,8 +37,7 @@ import {
   AttributeListUrlDialog,
   AttributeListUrlFilters,
   AttributeListUrlQueryParams,
-  attributeUrl,
-  AttributeListUrlSortField
+  attributeUrl
 } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
@@ -147,13 +147,7 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: AttributeListUrlSortField) =>
-    navigate(
-      attributeListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, attributeListUrl, params);
 
   return (
     <AttributeBulkDeleteMutation onCompleted={handleBulkDelete}>

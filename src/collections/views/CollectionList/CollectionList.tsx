@@ -20,7 +20,8 @@ import usePaginator, {
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import CollectionListPage from "../../components/CollectionListPage/CollectionListPage";
 import {
   TypedCollectionBulkDelete,
@@ -35,8 +36,7 @@ import {
   CollectionListUrlDialog,
   CollectionListUrlFilters,
   CollectionListUrlQueryParams,
-  collectionUrl,
-  CollectionListUrlSortField
+  collectionUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -166,13 +166,7 @@ export const CollectionList: React.FC<CollectionListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: CollectionListUrlSortField) =>
-    navigate(
-      collectionListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, collectionListUrl, params);
 
   return (
     <TypedCollectionBulkDelete onCompleted={handleCollectionBulkDelete}>

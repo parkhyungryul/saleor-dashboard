@@ -17,7 +17,8 @@ import { WebhookDelete } from "@saleor/webhooks/types/WebhookDelete";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import WebhooksListPage from "../../components/WebhooksListPage/WebhooksListPage";
 import { TypedWebhookDelete } from "../../mutations";
 import { useWebhooksListQuery } from "../../queries";
@@ -27,8 +28,7 @@ import {
   webhooksAddUrl,
   webhooksListUrl,
   WebhookListUrlQueryParams,
-  webhooksUrl,
-  WebhookListUrlSortField
+  webhooksUrl
 } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 import {
@@ -132,13 +132,7 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: WebhookListUrlSortField) =>
-    navigate(
-      webhooksListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, webhooksListUrl, params);
 
   return (
     <TypedWebhookDelete onCompleted={onWebhookDelete}>

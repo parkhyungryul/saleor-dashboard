@@ -18,7 +18,8 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
 import { ListViews } from "@saleor/types";
-import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import { configurationMenuUrl } from "../../../configuration";
 import { getMutationState, maybe } from "../../../misc";
 import ProductTypeListPage from "../../components/ProductTypeListPage";
@@ -31,8 +32,7 @@ import {
   ProductTypeListUrlDialog,
   ProductTypeListUrlFilters,
   ProductTypeListUrlQueryParams,
-  productTypeUrl,
-  ProductTypeListUrlSortField
+  productTypeUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -155,13 +155,7 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: ProductTypeListUrlSortField) =>
-    navigate(
-      productTypeListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, productTypeListUrl, params);
 
   return (
     <TypedProductTypeBulkDeleteMutation

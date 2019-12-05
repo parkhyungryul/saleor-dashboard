@@ -19,7 +19,8 @@ import usePaginator, {
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import CustomerListPage from "../../components/CustomerListPage";
 import { TypedBulkRemoveCustomers } from "../../mutations";
 import { useCustomerListQuery } from "../../queries";
@@ -30,8 +31,7 @@ import {
   CustomerListUrlDialog,
   CustomerListUrlFilters,
   CustomerListUrlQueryParams,
-  customerUrl,
-  CustomerListUrlSortField
+  customerUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -150,13 +150,7 @@ export const CustomerList: React.FC<CustomerListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: CustomerListUrlSortField) =>
-    navigate(
-      customerListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, customerListUrl, params);
 
   return (
     <TypedBulkRemoveCustomers onCompleted={handleBulkCustomerDelete}>

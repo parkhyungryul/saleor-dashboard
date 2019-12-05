@@ -18,7 +18,8 @@ import { getMutationState, maybe } from "@saleor/misc";
 import { ServiceDeleteMutation } from "@saleor/services/mutations";
 import { ServiceDelete } from "@saleor/services/types/ServiceDelete";
 import { ListViews } from "@saleor/types";
-import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import ServiceDeleteDialog from "../../components/ServiceDeleteDialog";
 import ServiceListPage from "../../components/ServiceListPage";
 import { useServiceListQuery } from "../../queries";
@@ -28,8 +29,7 @@ import {
   ServiceListUrlDialog,
   ServiceListUrlFilters,
   ServiceListUrlQueryParams,
-  serviceUrl,
-  ServiceListUrlSortField
+  serviceUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -149,13 +149,7 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: ServiceListUrlSortField) =>
-    navigate(
-      serviceListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, serviceListUrl, params);
 
   return (
     <ServiceDeleteMutation onCompleted={onRemove}>

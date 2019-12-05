@@ -21,7 +21,8 @@ import useShop from "@saleor/hooks/useShop";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import VoucherListPage from "../../components/VoucherListPage";
 import { TypedVoucherBulkDelete } from "../../mutations";
 import { useVoucherListQuery } from "../../queries";
@@ -32,8 +33,7 @@ import {
   VoucherListUrlDialog,
   VoucherListUrlFilters,
   VoucherListUrlQueryParams,
-  voucherUrl,
-  VoucherListUrlSortField
+  voucherUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -155,13 +155,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: VoucherListUrlSortField) =>
-    navigate(
-      voucherListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, voucherListUrl, params);
 
   return (
     <TypedVoucherBulkDelete onCompleted={handleVoucherBulkDelete}>

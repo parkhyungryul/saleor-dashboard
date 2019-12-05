@@ -17,7 +17,8 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import { CategoryListPage } from "../../components/CategoryListPage/CategoryListPage";
 import { useCategoryBulkDeleteMutation } from "../../mutations";
 import { useRootCategoriesQuery } from "../../queries";
@@ -28,8 +29,7 @@ import {
   CategoryListUrlDialog,
   CategoryListUrlFilters,
   CategoryListUrlQueryParams,
-  categoryUrl,
-  CategoryListUrlSortField
+  categoryUrl
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -158,13 +158,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
     maybe(() => categoryBulkDeleteOpts.data.categoryBulkDelete.errors)
   );
 
-  const handleSort = (field: CategoryListUrlSortField) =>
-    navigate(
-      categoryListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, categoryListUrl, params);
 
   return (
     <>

@@ -15,7 +15,8 @@ import usePaginator, {
 import { buttonMessages, commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
-import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
+import { getSortParams } from "@saleor/utils/sort";
+import createSortHandler from "@saleor/utils/handlers/sortHandler";
 import MenuCreateDialog from "../../components/MenuCreateDialog";
 import MenuListPage from "../../components/MenuListPage";
 import {
@@ -27,12 +28,7 @@ import { useMenuListQuery } from "../../queries";
 import { MenuBulkDelete } from "../../types/MenuBulkDelete";
 import { MenuCreate } from "../../types/MenuCreate";
 import { MenuDelete } from "../../types/MenuDelete";
-import {
-  menuListUrl,
-  MenuListUrlQueryParams,
-  menuUrl,
-  MenuListUrlSortField
-} from "../../urls";
+import { menuListUrl, MenuListUrlQueryParams, menuUrl } from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
 interface MenuListProps {
@@ -116,13 +112,7 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
     }
   };
 
-  const handleSort = (field: MenuListUrlSortField) =>
-    navigate(
-      menuListUrl({
-        ...params,
-        ...getSortUrlVariables(field, params)
-      })
-    );
+  const handleSort = createSortHandler(navigate, menuListUrl, params);
 
   return (
     <MenuCreateMutation onCompleted={handleCreate}>

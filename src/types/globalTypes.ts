@@ -386,6 +386,11 @@ export enum LanguageCodeEnum {
   ZH_HANT = "ZH_HANT",
 }
 
+export enum MenuSortField {
+  ITEMS_COUNT = "ITEMS_COUNT",
+  NAME = "NAME",
+}
+
 export enum OrderAction {
   CAPTURE = "CAPTURE",
   MARK_AS_PAID = "MARK_AS_PAID",
@@ -876,6 +881,11 @@ export interface MenuItemMoveInput {
   itemId: string;
   parentId?: string | null;
   sortOrder?: number | null;
+}
+
+export interface MenuSortingInput {
+  direction: OrderDirection;
+  field?: MenuSortField | null;
 }
 
 export interface NameTranslationInput {

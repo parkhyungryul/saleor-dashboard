@@ -18,6 +18,7 @@ import { getMutationState, maybe } from "@saleor/misc";
 import { ServiceDeleteMutation } from "@saleor/services/mutations";
 import { ServiceDelete } from "@saleor/services/types/ServiceDelete";
 import { ListViews } from "@saleor/types";
+import { getSortParams, getSortUrlVariables } from "@saleor/utils/sort";
 import ServiceDeleteDialog from "../../components/ServiceDeleteDialog";
 import ServiceListPage from "../../components/ServiceListPage";
 import { useServiceListQuery } from "../../queries";
@@ -27,7 +28,8 @@ import {
   ServiceListUrlDialog,
   ServiceListUrlFilters,
   ServiceListUrlQueryParams,
-  serviceUrl
+  serviceUrl,
+  ServiceListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -147,6 +149,14 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: ServiceListUrlSortField) =>
+    navigate(
+      serviceListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <ServiceDeleteMutation onCompleted={onRemove}>
       {(deleteService, deleteServiceOpts) => {
@@ -180,6 +190,7 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
               services={maybe(() =>
                 data.serviceAccounts.edges.map(edge => edge.node)
               )}
+              sort={getSortParams(params)}
               onAdd={handleCreate}
               onBack={() => navigate(configurationMenuUrl)}
               onNextPage={loadNextPage}
@@ -187,6 +198,7 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
               onUpdateListSettings={updateListSettings}
               onRowClick={id => () => navigate(serviceUrl(id))}
               onRemove={handleRemove}
+              onSort={handleSort}
             />
             <ServiceDeleteDialog
               confirmButtonState={removeTransitionState}

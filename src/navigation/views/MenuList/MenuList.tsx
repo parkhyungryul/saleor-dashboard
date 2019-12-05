@@ -15,6 +15,7 @@ import usePaginator, {
 import { buttonMessages, commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import MenuCreateDialog from "../../components/MenuCreateDialog";
 import MenuListPage from "../../components/MenuListPage";
 import {
@@ -26,7 +27,12 @@ import { useMenuListQuery } from "../../queries";
 import { MenuBulkDelete } from "../../types/MenuBulkDelete";
 import { MenuCreate } from "../../types/MenuCreate";
 import { MenuDelete } from "../../types/MenuDelete";
-import { menuListUrl, MenuListUrlQueryParams, menuUrl } from "../../urls";
+import {
+  menuListUrl,
+  MenuListUrlQueryParams,
+  menuUrl,
+  MenuListUrlSortField
+} from "../../urls";
 import { getSortQueryVariables } from "./sort";
 
 interface MenuListProps {
@@ -110,6 +116,14 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: MenuListUrlSortField) =>
+    navigate(
+      menuListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <MenuCreateMutation onCompleted={handleCreate}>
       {(menuCreate, menuCreateOpts) => (
@@ -163,9 +177,11 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
                       onPreviousPage={loadPreviousPage}
                       onUpdateListSettings={updateListSettings}
                       onRowClick={id => () => navigate(menuUrl(id))}
+                      onSort={handleSort}
                       pageInfo={pageInfo}
                       isChecked={isSelected}
                       selected={listElements.length}
+                      sort={getSortParams(params)}
                       toggle={toggle}
                       toggleAll={toggleAll}
                       toolbar={

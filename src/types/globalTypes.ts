@@ -544,6 +544,11 @@ export enum SaleType {
   PERCENTAGE = "PERCENTAGE",
 }
 
+export enum ServiceAccountSortField {
+  CREATION_DATE = "CREATION_DATE",
+  NAME = "NAME",
+}
+
 export enum ShippingMethodTypeEnum {
   PRICE = "PRICE",
   WEIGHT = "WEIGHT",
@@ -1092,6 +1097,11 @@ export interface ServiceAccountInput {
   name?: string | null;
   isActive?: boolean | null;
   permissions?: (PermissionEnum | null)[] | null;
+}
+
+export interface ServiceAccountSortingInput {
+  direction: OrderDirection;
+  field?: ServiceAccountSortField | null;
 }
 
 export interface ServiceAccountTokenInput {

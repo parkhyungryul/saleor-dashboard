@@ -589,8 +589,9 @@ export enum VoucherDiscountType {
 }
 
 export enum VoucherSortField {
+  CODE = "CODE",
   END_DATE = "END_DATE",
-  NAME = "NAME",
+  MINIMUM_SPENT_AMOUNT = "MINIMUM_SPENT_AMOUNT",
   START_DATE = "START_DATE",
   TYPE = "TYPE",
   USAGE_LIMIT = "USAGE_LIMIT",

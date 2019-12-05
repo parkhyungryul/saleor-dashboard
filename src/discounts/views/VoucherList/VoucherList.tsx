@@ -21,6 +21,7 @@ import useShop from "@saleor/hooks/useShop";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import VoucherListPage from "../../components/VoucherListPage";
 import { TypedVoucherBulkDelete } from "../../mutations";
 import { useVoucherListQuery } from "../../queries";
@@ -31,7 +32,8 @@ import {
   VoucherListUrlDialog,
   VoucherListUrlFilters,
   VoucherListUrlQueryParams,
-  voucherUrl
+  voucherUrl,
+  VoucherListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -153,6 +155,14 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: VoucherListUrlSortField) =>
+    navigate(
+      voucherListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <TypedVoucherBulkDelete onCompleted={handleVoucherBulkDelete}>
       {(voucherBulkDelete, voucherBulkDeleteOpts) => {
@@ -190,8 +200,10 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
               onPreviousPage={loadPreviousPage}
               onUpdateListSettings={updateListSettings}
               onRowClick={id => () => navigate(voucherUrl(id))}
+              onSort={handleSort}
               isChecked={isSelected}
               selected={listElements.length}
+              sort={getSortParams(params)}
               toggle={toggle}
               toggleAll={toggleAll}
               toolbar={

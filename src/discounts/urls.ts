@@ -23,7 +23,11 @@ export enum SaleListUrlFiltersEnum {
 export type SaleListUrlFilters = Filters<SaleListUrlFiltersEnum>;
 export type SaleListUrlDialog = "remove" | TabActionDialog;
 export enum SaleListUrlSortField {
-  name = "name"
+  name = "name",
+  endDate = "end-date",
+  startDate = "start-date",
+  type = "type",
+  value = "value"
 }
 export type SaleListUrlSort = Sort<SaleListUrlSortField>;
 export type SaleListUrlQueryParams = ActiveTab &
@@ -60,7 +64,13 @@ export enum VoucherListUrlFiltersEnum {
 export type VoucherListUrlFilters = Filters<VoucherListUrlFiltersEnum>;
 export type VoucherListUrlDialog = "remove" | TabActionDialog;
 export enum VoucherListUrlSortField {
-  name = "name"
+  code = "code",
+  endDate = "end-date",
+  limit = "limit",
+  minSpent = "min-spent",
+  startDate = "start-date",
+  type = "type",
+  value = "value"
 }
 export type VoucherListUrlSort = Sort<VoucherListUrlSortField>;
 export type VoucherListUrlQueryParams = ActiveTab &

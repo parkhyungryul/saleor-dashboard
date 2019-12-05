@@ -21,6 +21,7 @@ import useShop from "@saleor/hooks/useShop";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import { getSortUrlVariables, getSortParams } from "@saleor/utils/sort";
 import SaleListPage from "../../components/SaleListPage";
 import { TypedSaleBulkDelete } from "../../mutations";
 import { useSaleListQuery } from "../../queries";
@@ -31,7 +32,8 @@ import {
   SaleListUrlDialog,
   SaleListUrlFilters,
   SaleListUrlQueryParams,
-  saleUrl
+  saleUrl,
+  SaleListUrlSortField
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -153,6 +155,14 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
     }
   };
 
+  const handleSort = (field: SaleListUrlSortField) =>
+    navigate(
+      saleListUrl({
+        ...params,
+        ...getSortUrlVariables(field, params)
+      })
+    );
+
   return (
     <TypedSaleBulkDelete onCompleted={handleSaleBulkDelete}>
       {(saleBulkDelete, saleBulkDeleteOpts) => {
@@ -190,8 +200,10 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
               onPreviousPage={loadPreviousPage}
               onUpdateListSettings={updateListSettings}
               onRowClick={id => () => navigate(saleUrl(id))}
+              onSort={handleSort}
               isChecked={isSelected}
               selected={listElements.length}
+              sort={getSortParams(params)}
               toggle={toggle}
               toggleAll={toggleAll}
               toolbar={

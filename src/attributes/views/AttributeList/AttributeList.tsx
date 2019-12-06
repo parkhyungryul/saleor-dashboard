@@ -21,6 +21,7 @@ import useNotifier from "@saleor/hooks/useNotifier";
 import usePaginator, {
   createPaginationState
 } from "@saleor/hooks/usePaginator";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import { PAGINATE_BY } from "../../../config";
 import useBulkActions from "../../../hooks/useBulkActions";
 import { getMutationState, maybe } from "../../../misc";
@@ -32,10 +33,10 @@ import { AttributeBulkDelete } from "../../types/AttributeBulkDelete";
 import {
   attributeAddUrl,
   attributeListUrl,
-  AttributeListUrlDialog,
   AttributeListUrlFilters,
   AttributeListUrlQueryParams,
-  attributeUrl
+  attributeUrl,
+  AttributeListUrlDialog
 } from "../../urls";
 
 interface AttributeListProps {
@@ -60,24 +61,10 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
         : 0
       : parseInt(params.activeTab, 0);
 
-  const closeModal = () =>
-    navigate(
-      attributeListUrl({
-        ...params,
-        action: undefined,
-        ids: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: AttributeListUrlDialog, ids?: string[]) =>
-    navigate(
-      attributeListUrl({
-        ...params,
-        action,
-        ids
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    AttributeListUrlDialog,
+    AttributeListUrlQueryParams
+  >(navigate, attributeListUrl, params);
 
   const changeFilterField = (filter: AttributeListUrlFilters) => {
     reset();
@@ -182,7 +169,11 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
                     toolbar={
                       <IconButton
                         color="primary"
-                        onClick={() => openModal("remove", listElements)}
+                        onClick={() =>
+                          openModal("remove", {
+                            ids: listElements
+                          })
+                        }
                       >
                         <DeleteIcon />
                       </IconButton>

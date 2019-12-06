@@ -10,10 +10,10 @@ import React from "react";
 
 import PluginsListPage from "../components/PluginsListPage/PluginsListPage";
 import { TypedPluginsListQuery } from "../queries";
-import { PluginsListUrlQueryParams, pluginsUrl } from "../urls";
+import { PluginListUrlQueryParams, pluginUrl } from "../urls";
 
 interface PluginsListProps {
-  params: PluginsListUrlQueryParams;
+  params: PluginListUrlQueryParams;
 }
 
 export const PluginsList: React.FC<PluginsListProps> = ({ params }) => {
@@ -44,7 +44,7 @@ export const PluginsList: React.FC<PluginsListProps> = ({ params }) => {
               onNextPage={loadNextPage}
               onPreviousPage={loadPreviousPage}
               onUpdateListSettings={updateListSettings}
-              onRowClick={id => () => navigate(pluginsUrl(id))}
+              onRowClick={id => () => navigate(pluginUrl(id))}
             />
           </>
         );

@@ -6,23 +6,23 @@ import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import { sectionNames } from "@saleor/intl";
 import { WindowTitle } from "../components/WindowTitle";
 import {
-  pluginsListPath,
-  PluginsListUrlQueryParams,
-  pluginsPath,
-  PluginsUrlQueryParams
+  pluginListPath,
+  PluginListUrlQueryParams,
+  pluginPath,
+  PluginUrlQueryParams
 } from "./urls";
 import PluginsDetailsComponent from "./views/PluginsDetails";
 import PluginsListComponent from "./views/PluginsList";
 
 const PluginList: React.FC<RouteComponentProps<any>> = ({ location }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: PluginsListUrlQueryParams = qs;
+  const params: PluginListUrlQueryParams = qs;
   return <PluginsListComponent params={params} />;
 };
 
 const PageDetails: React.FC<RouteComponentProps<any>> = ({ match }) => {
   const qs = parseQs(location.search.substr(1));
-  const params: PluginsUrlQueryParams = qs;
+  const params: PluginUrlQueryParams = qs;
 
   return (
     <PluginsDetailsComponent
@@ -38,8 +38,8 @@ const Component = () => {
     <>
       <WindowTitle title={intl.formatMessage(sectionNames.plugins)} />
       <Switch>
-        <Route exact path={pluginsListPath} component={PluginList} />
-        <Route path={pluginsPath(":id")} component={PageDetails} />
+        <Route exact path={pluginListPath} component={PluginList} />
+        <Route path={pluginPath(":id")} component={PageDetails} />
       </Switch>
     </>
   );

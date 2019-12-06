@@ -17,16 +17,17 @@ import { WebhookDelete } from "@saleor/webhooks/types/WebhookDelete";
 import React from "react";
 import { useIntl } from "react-intl";
 
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import WebhooksListPage from "../components/WebhooksListPage/WebhooksListPage";
 import { TypedWebhookDelete } from "../mutations";
 import { TypedWebhooksListQuery } from "../queries";
 import {
   WebhookListUrlDialog,
   WebhookListUrlFilters,
-  webhooksAddUrl,
-  webhooksListUrl,
-  WebhooksListUrlQueryParams,
-  webhooksUrl
+  webhookAddUrl,
+  webhookListUrl,
+  WebhookListUrlQueryParams,
+  webhookUrl
 } from "../urls";
 import {
   areFiltersApplied,
@@ -38,7 +39,7 @@ import {
 } from "./filter";
 
 interface WebhooksListProps {
-  params: WebhooksListUrlQueryParams;
+  params: WebhookListUrlQueryParams;
 }
 
 export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
@@ -60,34 +61,21 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
 
   const changeFilterField = (filter: WebhookListUrlFilters) =>
     navigate(
-      webhooksListUrl({
+      webhookListUrl({
         ...getActiveFilters(params),
         ...filter,
         activeTab: undefined
       })
     );
-  const closeModal = () =>
-    navigate(
-      webhooksListUrl({
-        ...params,
-        action: undefined,
-        id: undefined
-      }),
-      true
-    );
 
-  const openModal = (action: WebhookListUrlDialog, id?: string) =>
-    navigate(
-      webhooksListUrl({
-        ...params,
-        action,
-        id
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    WebhookListUrlDialog,
+    WebhookListUrlQueryParams
+  >(navigate, webhookListUrl, params);
 
   const handleTabChange = (tab: number) => {
     navigate(
-      webhooksListUrl({
+      webhookListUrl({
         activeTab: tab.toString(),
         ...getFilterTabs()[tab - 1].data
       })
@@ -96,7 +84,7 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
 
   const handleTabDelete = () => {
     deleteFilterTab(currentTab);
-    navigate(webhooksListUrl());
+    navigate(webhookListUrl());
   };
 
   const handleTabSave = (data: SaveFilterTabDialogFormData) => {
@@ -121,7 +109,7 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
             notify({
               text: intl.formatMessage(commonMessages.savedChanges)
             });
-            navigate(webhooksListUrl());
+            navigate(webhookListUrl());
             refetch();
           }
         };
@@ -135,7 +123,7 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
               );
               const handleRemove = (id: string) => {
                 navigate(
-                  webhooksListUrl({
+                  webhookListUrl({
                     ...params,
                     action: "remove",
                     id
@@ -162,7 +150,7 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
                     currentTab={currentTab}
                     initialSearch={params.query || ""}
                     onSearchChange={query => changeFilterField({ query })}
-                    onAll={() => navigate(webhooksListUrl())}
+                    onAll={() => navigate(webhookListUrl())}
                     onTabChange={handleTabChange}
                     onTabDelete={() => openModal("delete-search")}
                     onTabSave={() => openModal("save-search")}
@@ -173,13 +161,13 @@ export const WebhooksList: React.FC<WebhooksListProps> = ({ params }) => {
                       data.webhooks.edges.map(edge => edge.node)
                     )}
                     pageInfo={pageInfo}
-                    onAdd={() => navigate(webhooksAddUrl)}
+                    onAdd={() => navigate(webhookAddUrl)}
                     onBack={() => navigate(configurationMenuUrl)}
                     onNextPage={loadNextPage}
                     onPreviousPage={loadPreviousPage}
                     onRemove={handleRemove}
                     onUpdateListSettings={updateListSettings}
-                    onRowClick={id => () => navigate(webhooksUrl(id))}
+                    onRowClick={id => () => navigate(webhookUrl(id))}
                   />
                   <WebhookDeleteDialog
                     confirmButtonState={deleteTransitionState}

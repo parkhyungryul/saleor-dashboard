@@ -19,6 +19,7 @@ import usePaginator, {
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import CustomerListPage from "../../components/CustomerListPage";
 import { TypedBulkRemoveCustomers } from "../../mutations";
 import { TypedCustomerListQuery } from "../../queries";
@@ -26,10 +27,10 @@ import { BulkRemoveCustomers } from "../../types/BulkRemoveCustomers";
 import {
   customerAddUrl,
   customerListUrl,
-  CustomerListUrlDialog,
   CustomerListUrlFilters,
   CustomerListUrlQueryParams,
-  customerUrl
+  customerUrl,
+  CustomerListUrlDialog
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -76,24 +77,10 @@ export const CustomerList: React.FC<CustomerListProps> = ({ params }) => {
     );
   };
 
-  const closeModal = () =>
-    navigate(
-      customerListUrl({
-        ...params,
-        action: undefined,
-        ids: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: CustomerListUrlDialog, ids?: string[]) =>
-    navigate(
-      customerListUrl({
-        ...params,
-        action,
-        ids
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    CustomerListUrlDialog,
+    CustomerListUrlQueryParams
+  >(navigate, customerListUrl, params);
 
   const handleTabChange = (tab: number) => {
     reset();
@@ -182,12 +169,9 @@ export const CustomerList: React.FC<CustomerListProps> = ({ params }) => {
                       <IconButton
                         color="primary"
                         onClick={() =>
-                          navigate(
-                            customerListUrl({
-                              action: "remove",
-                              ids: listElements
-                            })
-                          )
+                          openModal("remove", {
+                            ids: listElements
+                          })
                         }
                       >
                         <DeleteIcon />

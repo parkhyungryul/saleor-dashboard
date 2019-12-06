@@ -11,15 +11,11 @@ import { useIntl } from "react-intl";
 import { getMutationState, maybe } from "../../misc";
 import WebhookCreatePage, { FormData } from "../components/WebhookCreatePage";
 import { TypedWebhookCreate } from "../mutations";
-import {
-  webhooksListUrl,
-  WebhooksListUrlQueryParams,
-  webhooksUrl
-} from "../urls";
+import { webhookListUrl, WebhookListUrlQueryParams, webhookUrl } from "../urls";
 
 export interface WebhooksCreateProps {
   id: string;
-  params: WebhooksListUrlQueryParams;
+  params: WebhookListUrlQueryParams;
 }
 
 export const WebhooksCreate: React.FC<WebhooksCreateProps> = () => {
@@ -38,11 +34,11 @@ export const WebhooksCreate: React.FC<WebhooksCreateProps> = () => {
       notify({
         text: intl.formatMessage(commonMessages.savedChanges)
       });
-      navigate(webhooksUrl(data.webhookCreate.webhook.id));
+      navigate(webhookUrl(data.webhookCreate.webhook.id));
     }
   };
 
-  const handleBack = () => navigate(webhooksListUrl());
+  const handleBack = () => navigate(webhookListUrl());
 
   return (
     <TypedWebhookCreate onCompleted={onSubmit}>

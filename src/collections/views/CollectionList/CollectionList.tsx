@@ -20,6 +20,7 @@ import usePaginator, {
 import { commonMessages } from "@saleor/intl";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import CollectionListPage from "../../components/CollectionListPage/CollectionListPage";
 import {
   TypedCollectionBulkDelete,
@@ -31,10 +32,10 @@ import { CollectionBulkPublish } from "../../types/CollectionBulkPublish";
 import {
   collectionAddUrl,
   collectionListUrl,
-  CollectionListUrlDialog,
   CollectionListUrlFilters,
   CollectionListUrlQueryParams,
-  collectionUrl
+  collectionUrl,
+  CollectionListUrlDialog
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -81,24 +82,10 @@ export const CollectionList: React.FC<CollectionListProps> = ({ params }) => {
     );
   };
 
-  const closeModal = () =>
-    navigate(
-      collectionListUrl({
-        ...params,
-        action: undefined,
-        ids: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: CollectionListUrlDialog, ids?: string[]) =>
-    navigate(
-      collectionListUrl({
-        ...params,
-        action,
-        ids
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    CollectionListUrlDialog,
+    CollectionListUrlQueryParams
+  >(navigate, collectionListUrl, params);
 
   const handleTabChange = (tab: number) => {
     reset();
@@ -215,7 +202,9 @@ export const CollectionList: React.FC<CollectionListProps> = ({ params }) => {
                             <Button
                               color="primary"
                               onClick={() =>
-                                openModal("unpublish", listElements)
+                                openModal("unpublish", {
+                                  ids: listElements
+                                })
                               }
                             >
                               <FormattedMessage
@@ -225,7 +214,11 @@ export const CollectionList: React.FC<CollectionListProps> = ({ params }) => {
                             </Button>
                             <Button
                               color="primary"
-                              onClick={() => openModal("publish", listElements)}
+                              onClick={() =>
+                                openModal("publish", {
+                                  ids: listElements
+                                })
+                              }
                             >
                               <FormattedMessage
                                 defaultMessage="Publish"
@@ -234,7 +227,11 @@ export const CollectionList: React.FC<CollectionListProps> = ({ params }) => {
                             </Button>
                             <IconButton
                               color="primary"
-                              onClick={() => openModal("remove", listElements)}
+                              onClick={() =>
+                                openModal("remove", {
+                                  ids: listElements
+                                })
+                              }
                             >
                               <DeleteIcon />
                             </IconButton>

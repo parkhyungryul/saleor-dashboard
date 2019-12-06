@@ -17,6 +17,7 @@ import usePaginator, {
 } from "@saleor/hooks/usePaginator";
 import { getMutationState, maybe } from "@saleor/misc";
 import { ListViews } from "@saleor/types";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import { CategoryListPage } from "../../components/CategoryListPage/CategoryListPage";
 import { useCategoryBulkDeleteMutation } from "../../mutations";
 import { useRootCategoriesQuery } from "../../queries";
@@ -24,10 +25,10 @@ import { CategoryBulkDelete } from "../../types/CategoryBulkDelete";
 import {
   categoryAddUrl,
   categoryListUrl,
-  CategoryListUrlDialog,
   CategoryListUrlFilters,
   CategoryListUrlQueryParams,
-  categoryUrl
+  categoryUrl,
+  CategoryListUrlDialog
 } from "../../urls";
 import {
   areFiltersApplied,
@@ -87,24 +88,10 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
     );
   };
 
-  const closeModal = () =>
-    navigate(
-      categoryListUrl({
-        ...params,
-        action: undefined,
-        ids: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: CategoryListUrlDialog, ids?: string[]) =>
-    navigate(
-      categoryListUrl({
-        ...params,
-        action,
-        ids
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    CategoryListUrlDialog,
+    CategoryListUrlQueryParams
+  >(navigate, categoryListUrl, params);
 
   const handleTabChange = (tab: number) => {
     reset();

@@ -17,6 +17,7 @@ import ProductVariantCreateDialog from "@saleor/products/components/ProductVaria
 import { ProductVariantBulkCreate } from "@saleor/products/types/ProductVariantBulkCreate";
 import useCategorySearch from "@saleor/searches/useCategorySearch";
 import useCollectionSearch from "@saleor/searches/useCollectionSearch";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import { getMutationState, maybe } from "../../../misc";
 import ProductUpdatePage from "../../components/ProductUpdatePage";
 import ProductUpdateOperations from "../../containers/ProductUpdateOperations";
@@ -31,10 +32,10 @@ import {
   productImageUrl,
   productListUrl,
   productUrl,
-  ProductUrlDialog,
   ProductUrlQueryParams,
   productVariantAddUrl,
-  productVariantEditUrl
+  productVariantEditUrl,
+  ProductUrlDialog
 } from "../../urls";
 import {
   createImageReorderHandler,
@@ -70,12 +71,10 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
     variables: DEFAULT_INITIAL_SEARCH_DATA
   });
 
-  const openModal = (action: ProductUrlDialog) =>
-    navigate(
-      productUrl(id, {
-        action
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    ProductUrlDialog,
+    ProductUrlQueryParams
+  >(navigate, params => productUrl(id, params), params);
 
   return (
     <TypedProductDetailsQuery
@@ -128,7 +127,7 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
           data: ProductVariantBulkCreate
         ) => {
           if (data.productVariantBulkCreate.errors.length === 0) {
-            navigate(productUrl(id), true);
+            closeModal();
             refetch();
           }
         };
@@ -137,19 +136,11 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
           data: ProductVariantBulkDelete
         ) => {
           if (data.productVariantBulkDelete.errors.length === 0) {
-            navigate(productUrl(id), true);
+            closeModal();
             reset();
             refetch();
           }
         };
-
-        const handleVariantCreatorOpen = () =>
-          navigate(
-            productUrl(id, {
-              ...params,
-              action: "create-variants"
-            })
-          );
 
         const product = data ? data.product : undefined;
         return (
@@ -263,7 +254,7 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
                     onImageReorder={handleImageReorder}
                     onSubmit={handleSubmit}
                     onVariantAdd={handleVariantAdd}
-                    onVariantsAdd={handleVariantCreatorOpen}
+                    onVariantsAdd={() => openModal("create-variants")}
                     onVariantShow={variantId => () =>
                       navigate(productVariantEditUrl(product.id, variantId))}
                     onImageUpload={handleImageUpload}
@@ -273,12 +264,9 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
                       <IconButton
                         color="primary"
                         onClick={() =>
-                          navigate(
-                            productUrl(id, {
-                              action: "remove-variants",
-                              ids: listElements
-                            })
-                          )
+                          openModal("remove-variants", {
+                            ids: listElements
+                          })
                         }
                       >
                         <DeleteIcon />
@@ -307,7 +295,7 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
                   />
                   <ActionDialog
                     open={params.action === "remove"}
-                    onClose={() => navigate(productUrl(id), true)}
+                    onClose={closeModal}
                     confirmButtonState={deleteTransitionState}
                     onConfirm={() => deleteProduct.mutate({ id })}
                     variant="delete"
@@ -328,7 +316,7 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
                   </ActionDialog>
                   <ActionDialog
                     open={params.action === "remove-variants"}
-                    onClose={() => navigate(productUrl(id), true)}
+                    onClose={closeModal}
                     confirmButtonState={bulkProductVariantDeleteTransitionState}
                     onConfirm={() =>
                       bulkProductVariantDelete.mutate({
@@ -370,14 +358,7 @@ export const ProductUpdate: React.FC<ProductUpdateProps> = ({ id, params }) => {
                       []
                     )}
                     currencySymbol={maybe(() => shop.defaultCurrency)}
-                    onClose={() =>
-                      navigate(
-                        productUrl(id, {
-                          ...params,
-                          action: undefined
-                        })
-                      )
-                    }
+                    onClose={closeModal}
                     onSubmit={inputs =>
                       bulkProductVariantCreate.mutate({
                         id,

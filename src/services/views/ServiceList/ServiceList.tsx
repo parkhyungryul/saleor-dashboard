@@ -1,5 +1,4 @@
 import React from "react";
-
 import useListSettings from "@saleor/hooks/useListSettings";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -18,6 +17,7 @@ import { getMutationState, maybe } from "@saleor/misc";
 import { ServiceDeleteMutation } from "@saleor/services/mutations";
 import { ServiceDelete } from "@saleor/services/types/ServiceDelete";
 import { ListViews } from "@saleor/types";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import ServiceDeleteDialog from "../../components/ServiceDeleteDialog";
 import ServiceListPage from "../../components/ServiceListPage";
 import { ServiceListQuery } from "../../queries";
@@ -69,24 +69,10 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
       })
     );
 
-  const closeModal = () =>
-    navigate(
-      serviceListUrl({
-        ...params,
-        action: undefined,
-        id: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: ServiceListUrlDialog, id?: string) =>
-    navigate(
-      serviceListUrl({
-        ...params,
-        action,
-        id
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    ServiceListUrlDialog,
+    ServiceListUrlQueryParams
+  >(navigate, serviceListUrl, params);
 
   const handleTabChange = (tab: number) => {
     navigate(
@@ -126,14 +112,6 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
         );
 
         const handleCreate = () => navigate(serviceAddUrl);
-        const handleRemove = (id: string) =>
-          navigate(
-            serviceListUrl({
-              ...params,
-              action: "remove",
-              id
-            })
-          );
         const onRemove = (data: ServiceDelete) => {
           if (data.serviceAccountDelete.errors.length === 0) {
             notify({
@@ -183,7 +161,11 @@ export const ServiceList: React.FC<ServiceListProps> = ({ params }) => {
                     onPreviousPage={loadPreviousPage}
                     onUpdateListSettings={updateListSettings}
                     onRowClick={id => () => navigate(serviceUrl(id))}
-                    onRemove={handleRemove}
+                    onRemove={id =>
+                      openModal("remove", {
+                        id
+                      })
+                    }
                   />
                   <ServiceDeleteDialog
                     confirmButtonState={removeTransitionState}

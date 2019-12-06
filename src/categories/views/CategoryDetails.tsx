@@ -13,6 +13,7 @@ import usePaginator, {
   createPaginationState
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
+import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import { PAGINATE_BY } from "../../config";
 import { getMutationState, maybe } from "../../misc";
 import { TypedProductBulkDeleteMutation } from "../../products/mutations";
@@ -36,8 +37,8 @@ import {
   categoryAddUrl,
   categoryListUrl,
   categoryUrl,
-  CategoryUrlDialog,
-  CategoryUrlQueryParams
+  CategoryUrlQueryParams,
+  CategoryUrlDialog
 } from "../urls";
 
 export interface CategoryDetailsProps {
@@ -128,24 +129,10 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
     );
   };
 
-  const closeModal = () =>
-    navigate(
-      categoryUrl(id, {
-        ...params,
-        action: undefined,
-        ids: undefined
-      }),
-      true
-    );
-
-  const openModal = (action: CategoryUrlDialog, ids?: string[]) =>
-    navigate(
-      categoryUrl(id, {
-        ...params,
-        action,
-        ids
-      })
-    );
+  const [openModal, closeModal] = createDialogActionHandlers<
+    CategoryUrlDialog,
+    CategoryUrlQueryParams
+  >(navigate, params => categoryUrl(id, params), params);
 
   const formTransitionState = getMutationState(
     updateResult.called,
@@ -263,7 +250,11 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
                 subcategoryListToolbar={
                   <IconButton
                     color="primary"
-                    onClick={() => openModal("delete-categories", listElements)}
+                    onClick={() =>
+                      openModal("delete-categories", {
+                        ids: listElements
+                      })
+                    }
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -271,7 +262,11 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
                 productListToolbar={
                   <IconButton
                     color="primary"
-                    onClick={() => openModal("delete-products", listElements)}
+                    onClick={() =>
+                      openModal("delete-products", {
+                        ids: listElements
+                      })
+                    }
                   >
                     <DeleteIcon />
                   </IconButton>

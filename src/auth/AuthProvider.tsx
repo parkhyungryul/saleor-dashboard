@@ -40,7 +40,11 @@ const AuthProviderOperations: React.FC<AuthProviderOperationsProps> = ({
         {(...tokenAuth) => (
           <TypedVerifyTokenMutation>
             {(...tokenVerify) => (
-              <AuthProvider tokenAuth={tokenAuth} tokenVerify={tokenVerify}>
+              <AuthProvider
+                tokenAuth={tokenAuth}
+                tokenVerify={tokenVerify}
+                socialAuth={socialAuth}
+              >
                 {children}
               </AuthProvider>
             )}

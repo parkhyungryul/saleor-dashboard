@@ -6,8 +6,17 @@ import {
   saveCredentials
 } from "@saleor/utils/credentialsManagement";
 import { MutationFunction, MutationResult } from "react-apollo";
-import { TypedTokenAuthMutation, TypedVerifyTokenMutation } from "./mutations";
-import { TokenAuth, TokenAuthVariables } from "./types/TokenAuth";
+import {
+  TypedTokenAuthMutation,
+  TypedVerifyTokenMutation,
+  TypedSocialAuthMutation
+} from "./mutations";
+import {
+  TokenAuth,
+  TokenAuthVariables,
+  SocialAuth,
+  SocialAuthVariables
+} from "./types/TokenAuth";
 import { User } from "./types/User";
 import { VerifyToken, VerifyTokenVariables } from "./types/VerifyToken";
 import { getAuthToken, removeAuthToken, setAuthToken } from "./utils";
@@ -25,17 +34,21 @@ interface AuthProviderOperationsProps {
 const AuthProviderOperations: React.FC<AuthProviderOperationsProps> = ({
   children
 }) => (
-  <TypedTokenAuthMutation>
-    {(...tokenAuth) => (
-      <TypedVerifyTokenMutation>
-        {(...tokenVerify) => (
-          <AuthProvider tokenAuth={tokenAuth} tokenVerify={tokenVerify}>
-            {children}
-          </AuthProvider>
+  <TypedSocialAuthMutation>
+    {(...socialAuth) => (
+      <TypedTokenAuthMutation>
+        {(...tokenAuth) => (
+          <TypedVerifyTokenMutation>
+            {(...tokenVerify) => (
+              <AuthProvider tokenAuth={tokenAuth} tokenVerify={tokenVerify}>
+                {children}
+              </AuthProvider>
+            )}
+          </TypedVerifyTokenMutation>
         )}
-      </TypedVerifyTokenMutation>
+      </TypedTokenAuthMutation>
     )}
-  </TypedTokenAuthMutation>
+  </TypedSocialAuthMutation>
 );
 
 interface AuthProviderProps {
@@ -53,6 +66,10 @@ interface AuthProviderProps {
   tokenVerify: [
     MutationFunction<VerifyToken, VerifyTokenVariables>,
     MutationResult<VerifyToken>
+  ];
+  socialAuth: [
+    MutationFunction<SocialAuth, SocialAuthVariables>,
+    MutationResult<SocialAuth>
   ];
 }
 

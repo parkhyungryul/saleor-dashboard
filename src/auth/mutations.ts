@@ -6,7 +6,12 @@ import {
   RequestPasswordResetVariables
 } from "./types/RequestPasswordReset";
 import { SetPassword, SetPasswordVariables } from "./types/SetPassword";
-import { TokenAuth, TokenAuthVariables } from "./types/TokenAuth";
+import {
+  TokenAuth,
+  TokenAuthVariables,
+  SocialAuth,
+  SocialAuthVariables
+} from "./types/TokenAuth";
 import { VerifyToken, VerifyTokenVariables } from "./types/VerifyToken";
 
 export const fragmentUser = gql`
@@ -40,6 +45,25 @@ export const tokenAuthMutation = gql`
     }
   }
 `;
+
+// Kakao loign mutation
+export const socialAuthMutation = gql`
+  ${fragmentUser}
+  mutation SocialAuth($accessToken: String!, $provider: String!) {
+    socialAuth(accessToken: $accessToken, provider: $provider) {
+      social {
+        user {
+          ...User
+        }
+      }
+      token
+    }
+  }
+`;
+export const TypedSocialAuthMutation = TypedMutation<
+  SocialAuth,
+  SocialAuthVariables
+>(socialAuthMutation);
 
 export const TypedTokenAuthMutation = TypedMutation<
   TokenAuth,

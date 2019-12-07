@@ -50,3 +50,24 @@ export interface TokenAuthVariables {
   email: string;
   password: string;
 }
+
+export interface SocialAuth_socialAuth_social{
+  __typename: "SocialType";
+  user: TokenAuth_tokenCreate_user | null;
+}
+
+export interface SocialAuth_socialAuth {
+  __typename: "SocialAuth";
+  token: string | null;
+  social: SocialAuth_socialAuth_social | null;
+}
+
+export interface SocialAuth {
+  socialAuth: SocialAuth_socialAuth | null;
+
+}
+
+export interface SocialAuthVariables {
+  accessToken: string;
+  provider: string;
+}
